@@ -9,3 +9,4 @@
 * [useFirstEffect](src/hooks/use-first-effect.ts)
 * [useMergeState](src/hooks/use-merge-state.ts)
 * [useVisibleControl](src/hooks/use-visible-control.ts)
+* [useUpdateEffect](src/hooks/use-update-effect.ts)

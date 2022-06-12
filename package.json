@@ -1,6 +1,7 @@
 {
   "name": "react-hooks",
   "version": "1.0.0",
+  "main": "./src/index.ts",
   "dependencies": {},
   "peerDependencies": {
     "react": "^18.1.0"

@@ -1,7 +1,9 @@
 import { Dispatch, SetStateAction, useCallback, useState } from 'react'
 import { useUnmountedRef } from "./use-unmounted-ref";
-export function useSafeState<S>(initialState: S | (() => S)): [S | undefined, Dispatch<SetStateAction<S | undefined>>] {
-  const [state, setState] = useState(initialState);
+import { isFunction } from "../utils";
+
+export function useSafeState<S>(initialState: S | (() => S)): [S, Dispatch<SetStateAction<S>>] {
+  const [state, setState] = useState(isFunction(initialState) ? initialState() : initialState);
   const unmountedRef = useUnmountedRef();
   return [
     state,
