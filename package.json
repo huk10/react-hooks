@@ -1,12 +1,28 @@
 {
-  "name": "react-hooks",
+  "name": "@huk/react-hooks",
   "version": "1.0.0",
+  "type": "module",
   "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "./src"
+  ],
+  "scripts": {
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
+  },
   "dependencies": {},
   "peerDependencies": {
     "react": "^18.1.0"
   },
   "devDependencies": {
-    "@types/react": "^18.0.10"
+    "@types/react": "^18.0.10",
+    "@vitest/coverage-c8": "^0.29.1",
+    "jsdom": "^21.1.0",
+    "react": "^18.1.0",
+    "vitest": "^0.29.1",
+    "@testing-library/react": "^14.0.0"
   }
 }
