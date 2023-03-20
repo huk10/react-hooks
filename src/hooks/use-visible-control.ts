@@ -1,7 +1,9 @@
 import {useMemo, useState} from 'react';
 import {useRefObject} from './use-ref-object';
 
-type Control<T extends Record<string, boolean>> = {
+type Value = Record<string, boolean>
+
+type Control<T extends Value> = {
   [P in keyof T]: {
     toggle: () => void;
     open: () => void;
@@ -9,7 +11,7 @@ type Control<T extends Record<string, boolean>> = {
     setValue: (newValue: boolean) => void;
   };
 };
-type SwitchControlType<T extends Record<string, boolean>> = Control<T> & {
+type SwitchControlType<T extends Value> = Control<T> & {
   closeAll: () => void;
 };
 
@@ -24,16 +26,13 @@ type HooksOption = {
  * @param options
  * @date 2022/5/6
  */
-export function useVisibleControl<T extends Record<string, boolean>>(
-  keys: T,
-  options: HooksOption = {}
-): [T, SwitchControlType<T>] {
+export function useVisibleControl<T extends Value>(keys: T, options: HooksOption = {}): [T, SwitchControlType<T>] {
   const [state, setState] = useState(keys);
   const option = useRefObject(options);
   return [
     state,
     useMemo(() => {
-      const changeStatus = (oldValue: T, currKey: string, nextKeyValue) => {
+      const changeStatus = (oldValue: T, currKey: keyof T, nextKeyValue: boolean) => {
         const otherKeys = Object.keys(oldValue).filter(val => val !== currKey);
         const newValue = {...oldValue, [currKey]: nextKeyValue} as Record<string, boolean>;
         // 如果互斥并且目标key的下一个值是true，就先关闭所有其他值
@@ -48,17 +47,17 @@ export function useVisibleControl<T extends Record<string, boolean>>(
 
       const result = {
         closeAll() {
-          setState(
-            oldValue =>
-              Object.keys(oldValue).reduce((prev, curr) => {
-                prev[curr] = false;
-                return prev;
-              }, {}) as T
-          );
+          setState(oldValue => {
+            const newValue: Value = {};
+            for (const key of Object.keys(oldValue)) {
+              newValue[key] = false;
+            }
+            return newValue as T;
+          });
         },
-      };
+      } as Control<T>;
 
-      for (const key of Object.keys(keys)) {
+      for (const key of Object.keys(keys) as unknown as (keyof T)[]) {
         result[key] = {
           toggle() {
             setState(oldValue => changeStatus(oldValue, key, !oldValue[key]));
